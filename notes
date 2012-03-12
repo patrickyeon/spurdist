@@ -1,0 +1,20 @@
+Mixers create a whole pile of IMPs: for an input (RF, LO), they create products at (mRF, nLO) for m,n {elt of} 0,1,2... One of those products is what we want, at the IF (eg, IF = LO - RF), the others need to be kept far enough away from the IF that the IF filter can cut them out. Easy to do for one IF,RF,LO triplet, see original mixer spur charts. With a swept LO, though, everything moves around for different RFs.
+
+So instead of looking at where IMPs land around the IF, we look at what frequencies at the RF port create troublesome IMPs. Choose a mixer configuration (again, eg IF = LO - RF), and an IF. We denote frequencies as RFmn where f = RFmn at the RF port causes an IMP at the IF port through the interaction IF = mRFmn + nLO. Even better, we define dmn = RFmn - RF, the distance between the signal we want (RF), and the one that will cause trouble (RFmn). With a chosen mixer configuration, LO is dependent on RF, IF is known, so we can define dmn completely in terms of RF for each spur product (m,n).
+
+Then we plot dmn vs RF for a fixed IF and mixer config, and can easily spot the tracts of space where no dangerous spurs come near the IF band. The large spaces allow us to choose suitable wide front end RF filters.
+
+Negative Frequencies
+====
+
+Frequencies can go negative! Basically, it just means the same frequency, but 180 degree phase shift [TODO check theory here]. For our purposes, we treat that as "same frequency". The (2rf, 3lo) spur is 4 spurs (+/-2rf +/-3lo), but for us it's two spurs, with two representations each (+/-2rf, +/-3lo) and (+/-2rf, -/+3lo), the sum and difference mixing products respectively. We can handle them by calculating dmn for both products in each pair, and only worrying about the nearest one (smallest abs(dmn)) for each pair.
+
+Canonical Products
+====
+
+mRF - nLO and nLO - mRF are the same actual product, one just results in a negative frequency, the other in a positive. We would rather describe the product in a way that results in positive frequencies, as that's what most people are used to thinking in terms of. Too bad there's no general way to name a product that is sure to apply across all the RF freqs of interest. eg in a (-1,1) mixer, think of the 2RF-LO spur: When RF < IF, 2RF < LO. But when RF > IF, 2RF > LO.
+
+Well so much for perfect canonical products, I guess. I can look at the 80% solution:
+- (m,n) vs. (-m,-n) is straightforward: use (m,n)
+- (+/-m,0), (0,+/-n): just call it mRF or nLO
+- (+/-m, -/+n): in the case that one or the other is positive throughout the RFrange, use that one. Or maybe just check across the fefilter range. Either way, when you write it, do POS - NEG, because that's easier to think of than -NEG + POS. 

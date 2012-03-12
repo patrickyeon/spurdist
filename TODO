@@ -1,0 +1,34 @@
+x draw front-end filter parallelograms
+  o automatically find filter spots
+x explore more general handling of neg. freqs, remove need for abs()
+  - okay, so it works, fixes weird dband-straddling-0 problem
+  - also brings in more dbands, but below the d = -RF line
+    - they are redundant, already accounted for in +d-space
+	o want to mask that off somehow?
+x GUI to hold graph
+  x abstract out the drawing details so that same code can GUI or webform
+  x sliders for RFmin,RFmax
+  x slider for IF (RF, d?)
+  o check that removed lines are getting GC'd
+  o B/W version
+o work with filter shape, mixer spur power estimation/model
+o test test test test
+o spurset.dspan: make it sensible, too easy to forget to halve it.
+
+GUI shit
+========
+o combined slider+textbox widget
+x observables
+  o this could probably be done cleaner
+x observers
+  x main app watches the chart which wathes the rangeset (which watches the chart) and spurset
+  x spurset watches (a mixer which watches IFslider) and rangeset
+  x chart watches fefilts which watches its sliders (which watch fefilt? funniness)
+o rangeset auto-setting
+  - put off until after initial release
+x fefilt.ondrag() gets xdata-None when dragged out of chart
+x fefilt flip min,max when dragging the parallelogram "inside-out"
+x fefilt tooltips for min, max
+
+o check out guiqwt for speed
+o show it to rfdude.com
