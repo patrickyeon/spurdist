@@ -9,15 +9,14 @@ from core.helper import *
 from core.mixer import *
 from chart import chart
 
-class AppForm(QMainWindow):
-    def __init__(self, parent=None):
-        # FIXME make this less hard-coded
-        self.mx = mixer(-1, 1, 4030, 100, 215)
-        self.mx.spurs_from_limits(2,4)
-        self.spurset = spurset(0, 8000, 5000, self.mx)
-        self.fef = fefilt(4000, 6000, self.mx.IFbw)
-
+class MainWin(QMainWindow):
+    def __init__(self, mx, spurs, fef, parent=None):
         QMainWindow.__init__(self, parent)
+
+        self.mx = mx
+        self.spurset = spurs
+        self.fef = fef
+
         self.chart = chart(self.spurset, self.fef)
         self.create_menu_bar()
         self.create_main_frame()
@@ -191,12 +190,3 @@ class SpinBox(QSpinBox):
     def update(self, obj):
         if self.value() != self.getter():
             self.setValue(self.getter())
-
-def main():
-    app = QApplication(argv)
-    form = AppForm()
-    form.show()
-    app.exec_()
-
-if __name__ == '__main__':
-    main()
