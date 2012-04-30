@@ -1,4 +1,5 @@
 #!/usr/bin/python2
+from itertools import product
 
 class observable(object):
     """A too-quick and too-ugly implementation of the observable pattern"""
@@ -49,38 +50,18 @@ class styles:
 
 class looping_test(object):
     def __init__(self, **kwargs):
-        self.loopargs = dict([(k, list(kwargs[k])) for k in kwargs])
-        self.curstate = [0] * len(self.loopargs)
-        self.argsordered = self.loopargs.keys()
-
-    def next_state(self):
-        i = 0
-        while(i < len(self.curstate)):
-            if self.curstate[i] + 1 >= len(self.loopargs[self.argsordered[i]]):
-                self.curstate[i] = 0
-                i += 1
-            else:
-                break
-        if i == len(self.curstate):
-            raise(StopIteration)
-
-        self.curstate[i] += 1
-        return dict([(k, self.loopargs[k][x]) for (k, x) in
-                     zip(self.argsordered, self.curstate)])
-
+        self.loopargs = kwargs
 
     def __call__(self, f):
         def wrapped(s):
             failures = 0
             firstfail = None
-            self.curstate = [0] * len(self.loopargs)
-            while(True):
+            keys = self.loopargs.keys()
+            states = product(*[self.loopargs[k] for k in keys])
+            for state in states:
                 try:
-                    state = self.next_state()
-                except(StopIteration):
-                    break
-                try:
-                    f(s, **state)
+                    args = dict(zip(keys, state))
+                    f(s, **args)
                 except(AssertionError):
                     failures += 1
                     if firstfail is None:
