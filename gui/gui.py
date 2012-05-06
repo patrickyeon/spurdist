@@ -65,12 +65,15 @@ class MainWin(QMainWindow):
         # TODO link up the textbox so that it can also be input
 
         self.IFslider = QSlider(Qt.Horizontal)
-        self.IFslider.setRange(0, 10000)
-        self.IFslider.setValue(self.spurset.mixer.IF)
+        # TODO I'd really like some form of slider that doesn't actually limit
+        # the user. Also, if IFtextbox could modify the IF, that'd be nice.
+        self.IFslider.setRange(int(self.mx.IF * 0.1), (self.mx.IF * 5))
+        self.IFslider.setValue(self.mx.IF)
         self.IFslider.setTracking(True)
         self.IFslider.setTickPosition(QSlider.TicksAbove)
-        self.IFslider.setSingleStep(50)
-        self.IFslider.setPageStep(250)
+        step = max(1, int(0.01 * self.mx.IF))
+        self.IFslider.setSingleStep(step)
+        self.IFslider.setPageStep(step * 10)
         self.IFcid = self.connect(self.IFslider, SIGNAL('valueChanged(int)'),
                                   self.IF_slide)
 
@@ -86,9 +89,9 @@ class MainWin(QMainWindow):
 
         # left column done. Now the right-hand side
         rangebox = QVBoxLayout()
-        for (prop, name, f) in [(spurset.RFmin, 'RFmin', 0),
-                                (spurset.RFmax, 'RFmax', 8000),
-                                (spurset.dspan, 'dspan', 5000)]:
+        for (prop, name, f) in [(spurset.RFmin, 'RFmin', self.spurset.RFmin),
+                                (spurset.RFmax, 'RFmax', self.spurset.RFmax),
+                                (spurset.dspan, 'dspan', self.spurset.dspan)]:
             rangebox.addLayout(Fbar(self.spurset, prop,
                                     name, f, 0, 10000))
         autocb = QCheckBox('Auto')
