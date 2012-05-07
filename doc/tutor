@@ -1,3 +1,5 @@
+TODO: check that G is actually the IF filter guard band, and not the RF filter guard band. I think it's the latter, this work was doen with the former.
+
 We're going to design the receiver chain for a single stage down-converter to grab a whole bunch of TV channels. In North America, TV is across three bands: VHF I (chan 2-6, 54-72, 76-88 MHz), VHF III (chan 7-13, 174-216 MHz), and UHF (chan 14-69, 470-806 MHz), those are the RF frequencies we want. Our output is the final IF, for which we'll use 140 MHz, and to make things interesting, we'll insist on 14 MHz bandwidth at the output (TV channels are 6MHz wide, btw). Arbitrarily, we'll work with a target SFDR of 50 dB.
 
 To create a mixer with these specs, where IF = RF - LO, we do:
@@ -32,3 +34,5 @@ A couple notes on that though.
 1a. However, you may be able to get away with a single tone LO for the first stage, moving the whole VHF I band up to ~450. This would be less of an increase than a complete second frequency synthesizer.
 2. It creates additional complexity through the VHF I band that is not there on the others. This is manageable.
 3. You may be tempted to just use the bottom end of the UHF front end filter as a first IF filter. Think it through, and take a look at the spur distances chart for that config before you do.
+
+So now we have a frequency plan, simple as that. There is still a lot more work to go through, which may come around to invalidating this design, but the process is all there. An example problem may be that using an IF = LO - RF configuration causes spectral inversion (a channel gets flipped as it gets downconverted, so that what is the upper end at RF becomes the lower end at IF), and even if that's acceptable, it may not be so that the VHF III and UHF bands get inverted, while the VHF I band does not (well, it gets inverted twice, which cancels it all out).
