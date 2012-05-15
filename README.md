@@ -8,6 +8,8 @@ The app needs a fair bit of work. Many characteristics are hard-coded (eg `sdc.p
 
 Usage
 -----
+A short and rough tutorial can now be found at http://patrickyeon.github.com/spurdist/
+
 The chart in the main window looks pretty much like the charts in the original article. You can set the IF using the slider below the chart, and the RF range is to the right. "dspan" is the height of the chart (ie: it shows `RF +/- (dspan/2)`). Click and drag the parallelogram sides (the vertical lines, that is) to change the width of the front-end filter.
 
 By default, the chart shows any intermodulation products of the form `mRF +/- nLO; {m<=2, n<=4}`. For now, this is hard-coded, see `sdc.py:9`.
@@ -15,6 +17,5 @@ By default, the chart shows any intermodulation products of the form `mRF +/- nL
 TODO Shortlist
 --------------
 * Better initial design entry
-* Half-decent introduction and how-to use it
 * Faster GUI (matplotlib may be the culprit here)
 * More tests, of course!
