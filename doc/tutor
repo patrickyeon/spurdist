@@ -1,5 +1,3 @@
-TODO: check that G is actually the IF filter guard band, and not the RF filter guard band. I think it's the latter, this work was doen with the former.
-
 We're going to design the receiver chain for a single stage down-converter to grab a whole bunch of TV channels. In North America, TV is across three bands: VHF I (chan 2-6, 54-72, 76-88 MHz), VHF III (chan 7-13, 174-216 MHz), and UHF (chan 14-69, 470-806 MHz), those are the RF frequencies we want. Our output is the final IF, for which we'll use 140 MHz, and to make things interesting, we'll insist on 14 MHz bandwidth at the output (TV channels are 6MHz wide, btw). Arbitrarily, we'll work with a target SFDR of 50 dB.
 
 To create a mixer with these specs, where IF = RF - LO, we do:
@@ -10,7 +8,7 @@ Target specs in hand, we can look for a mixer. For the purpose of this tutorial,
 Without looking too hard, I'll go with the ADL5801. Picking out all the mixing products of power worse than -50dBc:
 >>> m.spurs_from_list([(0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 8), (1, 0), (1, 3), (1, 5), (2, 0), (4, 0)])
 
-The spurset object holds limits of the chart, so to cover an RF range 0-1000 MHz, with a distance spane of +/- 1000 MHz:
+The spurset object holds limits of the chart, so to cover an RF range 0-1000 MHz, with a distance span of +/- 1000 MHz:
 >>> sp = mixer.spurset(0, 1000, 2000, m)
 
 And finally, let's see what a single filter to bring in all the TV bands at the same time will look like:
