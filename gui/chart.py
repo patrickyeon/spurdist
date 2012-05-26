@@ -6,12 +6,36 @@ from PyQt4.Qwt5 import *
 from core.helper import styles
 
 class chart(QwtPlot):
+    colours = {'red'    : Qt.red,
+               'green'  : Qt.green,
+               'blue'   : Qt.blue,
+               'yellow' : Qt.yellow,
+               'magenta': Qt.magenta}
+    styles = {'-' : Qt.SolidLine,
+              '--': Qt.DashLine,
+              ':' : Qt.DotLine,
+              '-.': Qt.DashDotLine}
+
+    @staticmethod
+    def getPen(colour, style):
+        return QPen(chart.colours[colour], 2, chart.styles[style])
+
     def __init__(self, spurset, fef, parent):
         QwtPlot.__init__(self, parent)
         self.spurset, self.mx, self.fef = spurset, spurset.mixer, fef
         self.spurstyles = styles()
         self.spurlines = {}
         self.feflines = []
+
+        self.setCanvasBackground(Qt.white)
+        self.setAxisScale(QwtPlot.xBottom, self.spurset.RFmin,
+                          self.spurset.RFmax)
+        self.setAxisScale(QwtPlot.yLeft, -self.spurset.dspan/2,
+                          self.spurset.dspan/2)
+
+        grid = QwtPlotGrid()
+        grid.setMajPen(QPen(Qt.black, 1, Qt.DashLine))
+        grid.attach(self)
 
     def redraw(self, obj):
         if obj is self.spurset or obj is self.mx:
@@ -38,7 +62,8 @@ class chart(QwtPlot):
                 self.spurlines[(m,n)] = []
                 for (li, leg) in zip(xys, (fmt_mn(m,n), '')):
                     chline = QwtPlotCurve(leg)
-                    chline.setPen(QPen(Qt.red))
+                    chline.setPen(chart.getPen(c,s))
+                    chline.setRenderHint(QwtPlotItem.RenderAntialiased)
                     chline.attach(self)
                     chline.setData((li[0][0], li[1][0]),
                                    (li[0][1], li[1][1]))
