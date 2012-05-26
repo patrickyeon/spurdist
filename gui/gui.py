@@ -17,7 +17,7 @@ class MainWin(QMainWindow):
         self.spurset = spurs
         self.fef = fef
 
-        self.chart = chart(self.spurset, self.fef)
+        self.chart = chart(self.spurset, self.fef, self)
         self.create_menu_bar()
         self.create_main_frame()
         self.hookup()
@@ -27,7 +27,7 @@ class MainWin(QMainWindow):
         # for changes and updates.
         self.mx.register(self.chart.redraw)
         self.spurset.register(self.chart.redraw)
-        self.fef.hookup(self.chart.canvas)
+        #self.fef.hookup(self.chart.canvas)
         self.fef.register(self.chart.redraw)
         self.chart.redraw(self.spurset)
         self.chart.redraw(self.fef)
@@ -54,7 +54,7 @@ class MainWin(QMainWindow):
 
     def create_main_frame(self):
         self.main_frame = QWidget()
-        self.chart.setParent(self.main_frame)
+        #self.chart.setParent(self.main_frame)
         # Looking at the main frame as two columns. On the left there is the
         # chart and the IF control. In the right column we'll have range
         # settings, mixer settings, and maybe other stuff that comes up?
@@ -84,7 +84,7 @@ class MainWin(QMainWindow):
         IFbar.addStretch()
 
         leftcol = QVBoxLayout()
-        leftcol.addWidget(self.chart.canvas)
+        leftcol.addWidget(self.chart)
         leftcol.addLayout(IFbar)
 
         # left column done. Now the right-hand side
