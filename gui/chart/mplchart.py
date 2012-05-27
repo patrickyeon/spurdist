@@ -3,15 +3,11 @@
 import matplotlib as mpl
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
+from gui.chart import chart as chart
 
-from core.helper import styles
-
-class chart:
-    def __init__(self, spurset, fef):
-        self.spurset, self.mx, self.fef = spurset, spurset.mixer, fef
-        self.spurstyles = styles()
-        self.spurlines = {}
-        self.feflines = []
+class mplchart(chart):
+    def __init__(self, spurset, fef, parent):
+        chart.__init__(self, spurset, fef, parent)
 
         self.fig = Figure()
         self.canvas = FigureCanvas(self.fig)
@@ -22,6 +18,7 @@ class chart:
         self.fig.add_axes(self.ax)
 
     def setParent(self, parent):
+        chart.setParent(self, parent)
         self.canvas.setParent(parent)
 
     def redraw(self, obj):
@@ -77,17 +74,3 @@ class chart:
             mkline(self.fef.top)
             mkline(self.fef.bot)
         self.canvas.draw()
-
-def fmt_mn(m, n):
-    rf = (str(abs(m)) if abs(m) > 1 else '') + 'RF'
-    lo = (str(abs(n)) if abs(n) > 1 else '') + 'LO'
-    if m * n > 0:
-        return rf + ' + ' + lo
-    elif m == 0:
-        return lo
-    elif n == 0:
-        return rf
-    elif m > 0:
-        return rf + ' - ' + lo
-    else:
-        return lo + ' - ' + rf
