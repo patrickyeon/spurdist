@@ -74,22 +74,25 @@ class chart(QwtPlot):
             #self.ax.set_ylim(-0.5*self.spurset.dspan, 0.5*self.spurset.dspan)
             #self.ax.set_xlim(self.spurset.RFmin, self.spurset.RFmax)
 
-        #elif obj is self.fef:
-        #    #remove old fef lines
-        #    for line in self.feflines:
-        #        self.ax.lines.remove(line)
-        #    self.feflines = []
-        #    # draw new ones
-        #    def mkline(xys, pick=None):
-        #        line = mpl.lines.Line2D(xys[0], xys[1], color='k', picker=pick)
-        #        self.feflines.append(line)
-        #        self.ax.add_line(line)
-        #        return line
-        #    self.fef.startline = mkline(self.fef.minf, 10)
-        #    self.fef.stopline = mkline(self.fef.maxf, 10)
-        #    mkline(self.fef.top)
-        #    mkline(self.fef.bot)
-        #self.canvas.draw()
+        elif obj is self.fef:
+            #remove old fef lines
+            for line in self.feflines:
+                line.detach()
+            self.feflines = []
+            # draw new ones
+            def mkline(xys, pick=None):
+                line = QwtPlotCurve('')
+                line.setPen(QPen(Qt.black, 2))
+                line.setRenderHint(QwtPlotItem.RenderAntialiased)
+                line.setData(xys[0], xys[1])
+                self.feflines.append(line)
+                line.attach(self)
+                return line
+            self.fef.startline = mkline(self.fef.minf, 10)
+            self.fef.stopline = mkline(self.fef.maxf, 10)
+            mkline(self.fef.top)
+            mkline(self.fef.bot)
+
         self.replot()
 
 def fmt_mn(m, n):
