@@ -31,8 +31,11 @@ class observable(object):
 class styles:
     """A consistent set of line, colour styles"""
     # TODO inherit from defaultdict?
-    def __init__(self, lines=['-', '--', ':', '-.'], colours=list('rgbym')):
-        self.lines, self.colours = lines, colours
+    deflines = '- -- : -.'.split()
+    defcolours = 'red green blue yellow magenta'.split()
+    def __init__(self, lines=None, colours=None):
+        self.lines = lines or styles.deflines
+        self.colours = colours or styles.defcolours
         self._iter = iter(())
         self._dict = {}
 
