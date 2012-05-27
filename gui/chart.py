@@ -37,6 +37,20 @@ class chart(QwtPlot):
         grid.setMajPen(QPen(Qt.black, 1, Qt.DashLine))
         grid.attach(self)
 
+    def replot(self):
+        xscale = self.axisScaleDiv(QwtPlot.xBottom)
+        yscale = self.axisScaleDiv(QwtPlot.yLeft)
+        lims = (xscale.lowerBound(), xscale.upperBound(),
+                yscale.lowerBound(), yscale.upperBound())
+        if lims[0] != self.spurset.RFmin or lims[1] != self.spurset.RFmax:
+            self.setAxisScale(QwtPlot.xBottom, self.spurset.RFmin,
+                              self.spurset.RFmax)
+        if lims[2] != -self.spurset.dspan/2 or lims[3] != self.spurset.dspan/2:
+            self.setAxisScale(QwtPlot.yLeft, -self.spurset.dspan/2,
+                              self.spurset.dspan/2)
+        QwtPlot.replot(self)
+
+
     def draw_spurs(self, obj):
         lines = self.spurset.spurset()
         legend_flag = (set(lines) != set(self.spurlines))
