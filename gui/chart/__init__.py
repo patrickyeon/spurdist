@@ -1,13 +1,11 @@
 #!/usr/bin/python2
 
-from PyQt4.QtGui import QWidget
-
 from core.helper import styles
 
-class chart(QWidget):
+class chart:
     def __init__(self, spurset, fef, parent):
-        QWidget.__init__(self, parent)
         self.spurset, self.mx, self.fef = spurset, spurset.mixer, fef
+        self.parent = parent
         self.spurstyles = styles()
         self.spurlines = {}
         self.feflines = []

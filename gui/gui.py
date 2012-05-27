@@ -7,7 +7,8 @@ from sys import argv
 
 from core.helper import *
 from core.mixer import *
-from chart import chart
+from chart.qwtchart import qwtchart as chart
+#from chart.mplchart import mplchart as chart
 
 class MainWin(QMainWindow):
     def __init__(self, mx, spurs, fef, parent=None):
@@ -27,6 +28,7 @@ class MainWin(QMainWindow):
         # for changes and updates.
         self.mx.register(self.chart.draw_spurs)
         self.spurset.register(self.chart.draw_spurs)
+        # TODO vv
         #self.fef.hookup(self.chart.canvas)
         self.fef.register(self.chart.draw_fef)
         self.chart.draw_spurs(self.spurset)
@@ -54,7 +56,6 @@ class MainWin(QMainWindow):
 
     def create_main_frame(self):
         self.main_frame = QWidget()
-        #self.chart.setParent(self.main_frame)
         # Looking at the main frame as two columns. On the left there is the
         # chart and the IF control. In the right column we'll have range
         # settings, mixer settings, and maybe other stuff that comes up?
@@ -84,7 +85,8 @@ class MainWin(QMainWindow):
         IFbar.addStretch()
 
         leftcol = QVBoxLayout()
-        leftcol.addWidget(self.chart)
+        leftcol.addWidget(self.chart.plot)
+        leftcol.setStretchFactor(self.chart.plot, 1)
         leftcol.addLayout(IFbar)
 
         # left column done. Now the right-hand side
@@ -131,9 +133,7 @@ class MainWin(QMainWindow):
         vbar.addLayout(rangebox)
         vbar.addLayout(fefstat)
         vbar.addLayout(mxbar)
-        legend = self.chart.legend()
-        vbar.addWidget(legend)
-        vbar.setStretchFactor(legend, 1)
+        vbar.addWidget(self.chart.legend())
         vbar.addStretch()
 
         hbox = QHBoxLayout()
