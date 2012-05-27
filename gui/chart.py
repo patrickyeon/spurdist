@@ -10,15 +10,15 @@ class chart(QwtPlot):
                'green'  : Qt.green,
                'blue'   : Qt.blue,
                'yellow' : Qt.yellow,
-               'magenta': Qt.magenta}
+               'magenta': Qt.magenta,
+               'black'  : Qt.black}
     styles = {'-' : Qt.SolidLine,
               '--': Qt.DashLine,
               ':' : Qt.DotLine,
               '-.': Qt.DashDotLine}
 
-    @staticmethod
-    def getPen(colour, style):
-        return QPen(chart.colours[colour], 2, chart.styles[style])
+    def getPen(self, colour, style):
+        return QPen(self.colours[colour], 2, self.styles[style])
 
     def __init__(self, spurset, fef, parent):
         QwtPlot.__init__(self, parent)
@@ -37,6 +37,8 @@ class chart(QwtPlot):
         grid.setMajPen(QPen(Qt.black, 1, Qt.DashLine))
         grid.attach(self)
 
+        self.insertLegend(QwtLegend(), QwtPlot.BottomLegend)
+
     def replot(self):
         xscale = self.axisScaleDiv(QwtPlot.xBottom)
         yscale = self.axisScaleDiv(QwtPlot.yLeft)
@@ -50,6 +52,15 @@ class chart(QwtPlot):
                               self.spurset.dspan/2)
         QwtPlot.replot(self)
 
+    def mkline(self, xdata, ydata, pen=('black','-'), title=''):
+        line = QwtPlotCurve(title)
+        if title is '':
+            line.setItemAttribute(QwtPlotItem.Legend, False)
+        pen = self.getPen(*pen)
+        line.setPen(pen)
+        line.setRenderHint(QwtPlotItem.RenderAntialiased)
+        line.setData(xdata, ydata)
+        return line
 
     def draw_spurs(self, obj):
         lines = self.spurset.spurset()
@@ -71,21 +82,13 @@ class chart(QwtPlot):
         # draw new ones
         for m,n in new:
             xys  = lines[(m,n)]
-            c,s = self.spurstyles[(m,n)]
             self.spurlines[(m,n)] = []
             for (li, leg) in zip(xys, (fmt_mn(m,n), '')):
-                chline = QwtPlotCurve(leg)
-                chline.setPen(chart.getPen(c,s))
-                chline.setRenderHint(QwtPlotItem.RenderAntialiased)
+                chline = self.mkline((li[0][0], li[1][0]), (li[0][1], li[1][1]),
+                                     self.spurstyles[(m,n)], leg)
                 chline.attach(self)
-                chline.setData((li[0][0], li[1][0]),
-                               (li[0][1], li[1][1]))
                 self.spurlines[(m,n)].append({'xys': li, 'mpl': chline})
 
-        #if legend_flag:
-        #    self.ax.legend(loc=(1.03,0))
-        #self.ax.set_ylim(-0.5*self.spurset.dspan, 0.5*self.spurset.dspan)
-        #self.ax.set_xlim(self.spurset.RFmin, self.spurset.RFmax)
         self.replot()
 
     def draw_fef(self, obj):
@@ -95,10 +98,7 @@ class chart(QwtPlot):
         self.feflines = []
         # draw new ones
         def mkline(xys, pick=None):
-            line = QwtPlotCurve('')
-            line.setPen(QPen(Qt.black, 2))
-            line.setRenderHint(QwtPlotItem.RenderAntialiased)
-            line.setData(xys[0], xys[1])
+            line = self.mkline(xys[0], xys[1])
             self.feflines.append(line)
             line.attach(self)
             return line
