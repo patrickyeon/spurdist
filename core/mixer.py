@@ -99,7 +99,7 @@ class mixer(observable):
 class spurset(observable):
     def __init__(self, RFmin, RFmax, dspan, mixer):
         observable.__init__(self)
-        self._RFmin, self._RFmax, self._dspan = RFmin, RFmax, dspan*0.5
+        self._RFmin, self._RFmax, self._dspan = RFmin, RFmax, dspan
         self.mixer = mixer
 
     RFmin = observable.wprop('_RFmin')
@@ -149,9 +149,9 @@ class spurset(observable):
             if w != 0 and abs(w*rf + c) > abs(self.dspan*0.5):
                 # horiz. lines happen, nothing wrong with that (2RF - 2LO, etc)
                 if w*rf + c > 0:
-                    rf = (self.dspan - c)/float(w)
+                    rf = (0.5*self.dspan - c)/float(w)
                 else:
-                    rf = (-1*self.dspan - c) / float(w)
+                    rf = (-0.5*self.dspan - c) / float(w)
             return (rf, w*rf + c)
 
         return [[pt_in_plot(w, c, r) for r in (self.RFmin, self.RFmax)]
