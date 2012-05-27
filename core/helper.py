@@ -75,3 +75,17 @@ class looping_test(object):
                                                                str(firstfail)))
         wrapped.__name__ = f.__name__
         return wrapped
+
+def fmt_mn(m, n):
+    rf = (str(abs(m)) if abs(m) > 1 else '') + 'RF'
+    lo = (str(abs(n)) if abs(n) > 1 else '') + 'LO'
+    if m * n > 0:
+        return rf + ' + ' + lo
+    elif m == 0:
+        return lo
+    elif n == 0:
+        return rf
+    elif m > 0:
+        return rf + ' - ' + lo
+    else:
+        return lo + ' - ' + rf

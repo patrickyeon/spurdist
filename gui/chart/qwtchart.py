@@ -3,7 +3,6 @@
 from PyQt4.Qt import *
 from PyQt4.Qwt5 import *
 
-from core.helper import styles
 from gui.chart import chart
 
 class qwtchart(chart):
@@ -23,10 +22,6 @@ class qwtchart(chart):
 
     def __init__(self, spurset, fef, parent):
         chart.__init__(self, spurset, fef, parent)
-        self.spurset, self.mx, self.fef = spurset, spurset.mixer, fef
-        self.spurstyles = styles()
-        self.spurlines = {}
-        self.feflines = []
         self.plot = QwtPlot(parent)
 
         self.plot.setCanvasBackground(Qt.white)
@@ -64,66 +59,11 @@ class qwtchart(chart):
         line.setData(xdata, ydata)
         return line
 
-    def draw_spurs(self, obj):
-        lines = self.spurset.spurset()
-        legend_flag = (set(lines) != set(self.spurlines))
-        remove = set(self.spurlines) - set(lines)
-        new = set(lines) - set(self.spurlines)
+    def add_line(self, line):
+        line.attach(self.plot)
 
-        # remove invalid lines
-        for key in set(self.spurlines) & set(lines):
-            for line in self.spurlines[key]:
-                if line['xys'] not in lines[key]:
-                    remove.add(key)
-                    new.add(key)
-        for key in remove:
-            for line in self.spurlines[key]:
-                line['mpl'].detach()
-            del self.spurlines[key]
-
-        # draw new ones
-        for m,n in new:
-            xys  = lines[(m,n)]
-            self.spurlines[(m,n)] = []
-            for (li, leg) in zip(xys, (fmt_mn(m,n), '')):
-                chline = self.mkline((li[0][0], li[1][0]), (li[0][1], li[1][1]),
-                                     self.spurstyles[(m,n)], leg)
-                chline.attach(self.plot)
-                self.spurlines[(m,n)].append({'xys': li, 'mpl': chline})
-
-        self.redraw()
-
-    def draw_fef(self, obj):
-        #remove old fef lines
-        for line in self.feflines:
-            line.detach()
-        self.feflines = []
-        # draw new ones
-        def mkline(xys, pick=None):
-            line = self.mkline(xys[0], xys[1])
-            self.feflines.append(line)
-            line.attach(self.plot)
-            return line
-        self.fef.startline = mkline(self.fef.minf, 10)
-        self.fef.stopline = mkline(self.fef.maxf, 10)
-        mkline(self.fef.top)
-        mkline(self.fef.bot)
-
-        self.redraw()
+    def del_line(self, line):
+        line.detach()
 
     def legend(self):
         self.plot.legend()
-
-def fmt_mn(m, n):
-    rf = (str(abs(m)) if abs(m) > 1 else '') + 'RF'
-    lo = (str(abs(n)) if abs(n) > 1 else '') + 'LO'
-    if m * n > 0:
-        return rf + ' + ' + lo
-    elif m == 0:
-        return lo
-    elif n == 0:
-        return rf
-    elif m > 0:
-        return rf + ' - ' + lo
-    else:
-        return lo + ' - ' + rf
