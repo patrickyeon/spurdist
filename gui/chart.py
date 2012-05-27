@@ -37,7 +37,7 @@ class chart(QwtPlot):
         grid.setMajPen(QPen(Qt.black, 1, Qt.DashLine))
         grid.attach(self)
 
-        self.insertLegend(QwtLegend(), QwtPlot.BottomLegend)
+        self.insertLegend(QwtLegend(), QwtPlot.ExternalLegend)
 
     def replot(self):
         xscale = self.axisScaleDiv(QwtPlot.xBottom)

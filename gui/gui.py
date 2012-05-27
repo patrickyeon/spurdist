@@ -131,6 +131,9 @@ class MainWin(QMainWindow):
         vbar.addLayout(rangebox)
         vbar.addLayout(fefstat)
         vbar.addLayout(mxbar)
+        legend = self.chart.legend()
+        vbar.addWidget(legend)
+        vbar.setStretchFactor(legend, 1)
         vbar.addStretch()
 
         hbox = QHBoxLayout()
