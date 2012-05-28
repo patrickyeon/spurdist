@@ -34,7 +34,7 @@ class qwtchart(chart):
         grid.setMajPen(QPen(Qt.black, 1, Qt.DashLine))
         grid.attach(self.plot)
 
-        self.plot.insertLegend(QwtLegend(), QwtPlot.ExternalLegend)
+        self.plot.insertLegend(QwtLegend(self.parent), QwtPlot.ExternalLegend)
 
     def redraw(self):
         xscale = self.plot.axisScaleDiv(QwtPlot.xBottom)
@@ -66,4 +66,4 @@ class qwtchart(chart):
         line.detach()
 
     def legend(self):
-        self.plot.legend()
+        return self.plot.legend()
