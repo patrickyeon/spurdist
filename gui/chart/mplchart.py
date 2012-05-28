@@ -9,6 +9,9 @@ from matplotlib.figure import Figure
 from gui.chart import chart
 
 class mplchart(chart):
+    colours = dict(zip('red green blue yellow magenta black'.split(),
+                       'r   g     b    y      m       k'.split()))
+
     def __init__(self, spurset, fef, parent):
         chart.__init__(self, spurset, fef, parent)
 
@@ -25,8 +28,8 @@ class mplchart(chart):
         return QWidget(self.parent)
     
     def mkline(self, xdata, ydata, style, title):
-        return mpl.lines.Line2D(xdata, ydata,
-                                color=style.c, ls=style.s, label=title)
+        return mpl.lines.Line2D(xdata, ydata, label=title,
+                                color=self.colours[style[0]], ls=style[1])
 
     def add_line(self, line):
         self.ax.add_line(line)
