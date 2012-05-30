@@ -135,6 +135,7 @@ class MainWin(QMainWindow):
         vbar.addLayout(mxbar)
         legend = self.chart.legend()
         vbar.addWidget(legend)
+        # need to let the legend stretch so that everything fits in it
         vbar.setStretchFactor(legend, 1)
         vbar.addStretch()
 

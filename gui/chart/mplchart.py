@@ -24,8 +24,13 @@ class mplchart(chart):
         self.ax.grid(True)
         self.fig.add_axes(self.ax)
 
+        self.legendFig = Figure(figsize=(1,1))
+        self.legendCanvas = FigureCanvas(self.legendFig)
+        self.legendFig.legend(*self.ax.get_legend_handles_labels(),
+                              loc='upper left')
+
     def legend(self):
-        return QWidget(self.parent)
+        return self.legendCanvas
     
     def mkline(self, xdata, ydata, style, title):
         return mpl.lines.Line2D(xdata, ydata, label=title,
@@ -40,11 +45,15 @@ class mplchart(chart):
     def draw_spurs(self, obj):
         chart.draw_spurs(self, obj)
 
-        self.ax.legend(loc=(1.03,0))
-
     def redraw(self):
         self.ax.set_ylim(-0.5*self.spurset.dspan, 0.5*self.spurset.dspan)
         self.ax.set_xlim(self.spurset.RFmin, self.spurset.RFmax)
+        # WHO WANTS TO BET THIS IS UNSUPPORTED?
+        # but damn, it works :/
+        self.legendFig.legends = []
+        self.legendFig.legend(*self.ax.get_legend_handles_labels(),
+                              loc='upper left')
+        self.legendCanvas.draw()
         self.plot.draw()
 
     def draw_fef(self, obj):
