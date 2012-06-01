@@ -14,20 +14,24 @@ class mplchart(chart):
 
     def __init__(self, spurset, fef, parent):
         chart.__init__(self, spurset, fef, parent)
+        bgcol = parent.palette().window().color().toRgb()
+        bgcol = [bgcol.redF(), bgcol.greenF(), bgcol.blueF()]
 
         self.fig = Figure()
         self.plot = FigureCanvas(self.fig)
         self.plot.setParent(parent)
-        self.ax = mpl.axes.Axes(self.fig, [0.1, 0.1, 0.7, 0.9])
+        self.ax = self.fig.add_subplot(111)
         self.ax.set_xlim(self.spurset.RFmin, self.spurset.RFmax)
         self.ax.set_ylim(-0.5*self.spurset.dspan, 0.5*self.spurset.dspan)
         self.ax.grid(True)
-        self.fig.add_axes(self.ax)
+        self.fig.tight_layout()
+        self.fig.set_facecolor(bgcol)
 
         self.legendFig = Figure(figsize=(1,1))
         self.legendCanvas = FigureCanvas(self.legendFig)
         self.legendFig.legend(*self.ax.get_legend_handles_labels(),
                               loc='upper left')
+        self.legendFig.set_facecolor(bgcol)
 
     def legend(self):
         return self.legendCanvas
