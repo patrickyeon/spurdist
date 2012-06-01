@@ -7,16 +7,19 @@ from sys import argv
 
 from core.helper import *
 from core.mixer import *
-from chart.qwtchart import qwtchart as chart
-#from chart.mplchart import mplchart as chart
 
 class MainWin(QMainWindow):
-    def __init__(self, mx, spurs, fef, parent=None):
+    def __init__(self, mx, spurs, fef, parent=None, useqwt=False):
         QMainWindow.__init__(self, parent)
 
         self.mx = mx
         self.spurset = spurs
         self.fef = fef
+    
+        if useqwt:
+            from chart.qwtchart import qwtchart as chart
+        else:
+            from chart.mplchart import mplchart as chart
 
         self.chart = chart(self.spurset, self.fef, self)
         self.create_menu_bar()
