@@ -40,6 +40,12 @@ class mplchart(chart):
         self.legendFig.legend(*self.ax.get_legend_handles_labels(),
                               loc='upper left')
 
+        # connect up the picker watching
+        self.picked_obj = None
+        self._pick = self.plot.mpl_connect('pick_event', self.onpick)
+        self._drag = self.plot.mpl_connect('motion_notify_event', self.ondrag)
+        self._drop = self.plot.mpl_connect('button_release_event', self.ondrop)
+
     def legend(self):
         return self.legendCanvas
 
@@ -69,5 +75,18 @@ class mplchart(chart):
 
     def draw_fef(self, obj):
         chart.draw_fef(self, obj)
-        self.feflines[0].set_pickradius(10)
-        self.feflines[1].set_pickradius(10)
+        self.feflines[0].set_picker(10)
+        self.feflines[1].set_picker(10)
+
+    def onpick(self, event):
+        obj, x, y = event.artist, event.mouseevent.xdata, event.mouseevent.ydata
+        self.picked_obj = obj
+        self.pick(obj, x, y)
+        self.drag(obj, x, y)
+
+    def ondrag(self, event):
+        self.drag(self.picked_obj, event.xdata, event.ydata)
+
+    def ondrop(self, event):
+        self.drop(self.picked_obj, event.xdata, event.ydata)
+        self.picked_obj = None

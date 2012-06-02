@@ -1,6 +1,10 @@
 #!/usr/bin/python2
 
+from collections import namedtuple
+
 from core.helper import styles, fmt_mn
+
+event = namedtuple('event', 'obj xdata ydata')
 
 class chart:
     """ Base Class for spur charts """
@@ -10,6 +14,9 @@ class chart:
         self.spurstyles = styles()
         self.spurlines = {}
         self.feflines = []
+
+        self.watchers = []
+        self.active_watchers = []
 
     # methods that subclasses need to provide
     def legend(self):
@@ -66,3 +73,26 @@ class chart:
         self.fef.startline = self.feflines[0]
         self.fef.stopline = self.feflines[1]
         self.redraw()
+
+    def picker_watch(self, watcher):
+        # registers a watcher for pick events
+        #  a watcher has three methods: onpick, ondrag, and ondrop. ondrag will
+        # only be notified if onpick returns True when called at the last pick
+        # TODO I bet this could be prettier
+        self.watchers.append(watcher)
+
+    def pick(self, obj, x, y):
+        evt = event(obj, x, y)
+        for w in self.watchers:
+            if w.onpick(evt):
+                self.active_watchers.append(w)
+    def drag(self, obj, x, y):
+        evt = event(obj, x, y)
+        for w in self.active_watchers:
+            w.ondrag(evt)
+    def drop(self, obj, x, y):
+        evt = event(obj, x, y)
+        for w in self.watchers:
+            w.ondrop(evt)
+        self.active_watchers = []
+
