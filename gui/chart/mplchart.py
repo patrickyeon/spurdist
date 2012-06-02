@@ -14,28 +14,35 @@ class mplchart(chart):
 
     def __init__(self, spurset, fef, parent):
         chart.__init__(self, spurset, fef, parent)
+
+        # make the figure blend in with the native application look
         bgcol = parent.palette().window().color().toRgb()
         bgcol = [bgcol.redF(), bgcol.greenF(), bgcol.blueF()]
 
         self.fig = Figure()
+        self.fig.set_facecolor(bgcol)
+        
+        # a FigureCanvas can be added as a QWidget, so we use that
         self.plot = FigureCanvas(self.fig)
         self.plot.setParent(parent)
+
         self.ax = self.fig.add_subplot(111)
+        # TODO skip this, just do a redraw() after initialization?
         self.ax.set_xlim(self.spurset.RFmin, self.spurset.RFmax)
         self.ax.set_ylim(-0.5*self.spurset.dspan, 0.5*self.spurset.dspan)
         self.ax.grid(True)
         self.fig.tight_layout()
-        self.fig.set_facecolor(bgcol)
 
-        self.legendFig = Figure(figsize=(1,1))
+        # a second figure to hold the legend
+        self.legendFig = Figure()
+        self.legendFig.set_facecolor(bgcol)
         self.legendCanvas = FigureCanvas(self.legendFig)
         self.legendFig.legend(*self.ax.get_legend_handles_labels(),
                               loc='upper left')
-        self.legendFig.set_facecolor(bgcol)
 
     def legend(self):
         return self.legendCanvas
-    
+
     def mkline(self, xdata, ydata, style, title):
         return mpl.lines.Line2D(xdata, ydata, label=title,
                                 color=self.colours[style[0]], ls=style[1])

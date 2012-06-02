@@ -3,12 +3,25 @@
 from core.helper import styles, fmt_mn
 
 class chart:
+    """ Base Class for spur charts """
     def __init__(self, spurset, fef, parent):
         self.spurset, self.mx, self.fef = spurset, spurset.mixer, fef
         self.parent = parent
         self.spurstyles = styles()
         self.spurlines = {}
         self.feflines = []
+
+    # methods that subclasses need to provide
+    def legend(self):
+        raise NotImplementedError
+    def mk_line(self, xdata, ydata, style, title):
+        raise NotImplementedError
+    def add_line(self, line):
+        raise NotImplementedError
+    def del_line(self):
+        raise NotImplementedError
+    def redraw(self):
+        raise NotImplementedError
 
     def draw_spurs(self, obj):
         lines = self.spurset.spurset()

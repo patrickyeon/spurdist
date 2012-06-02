@@ -31,7 +31,7 @@ class qwtchart(chart):
                                self.spurset.dspan/2)
 
         grid = QwtPlotGrid()
-        grid.setMajPen(QPen(Qt.black, 1, Qt.DashLine))
+        grid.setMajPen(QPen(Qt.black, 1, Qt.DotLine))
         grid.attach(self.plot)
 
         self.plot.insertLegend(QwtLegend(self.parent), QwtPlot.ExternalLegend)
@@ -41,6 +41,7 @@ class qwtchart(chart):
         yscale = self.plot.axisScaleDiv(QwtPlot.yLeft)
         lims = (xscale.lowerBound(), xscale.upperBound(),
                 yscale.lowerBound(), yscale.upperBound())
+        #TODO check if it hurts to just set the scales every time, as in mpl
         if lims[0] != self.spurset.RFmin or lims[1] != self.spurset.RFmax:
             self.plot.setAxisScale(QwtPlot.xBottom, self.spurset.RFmin,
                                    self.spurset.RFmax)
@@ -49,11 +50,12 @@ class qwtchart(chart):
                                    self.spurset.dspan/2)
         self.plot.replot()
 
-    def mkline(self, xdata, ydata, pen=('black','-'), title=''):
+    def mkline(self, xdata, ydata, style=('black','-'), title=''):
         line = QwtPlotCurve(title)
         if title is '':
+            # kind of ugly, that the title variable is doing double duty
             line.setItemAttribute(QwtPlotItem.Legend, False)
-        pen = self.getPen(*pen)
+        pen = self.getPen(*style)
         line.setPen(pen)
         line.setRenderHint(QwtPlotItem.RenderAntialiased)
         line.setData(xdata, ydata)
