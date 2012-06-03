@@ -1,12 +1,13 @@
 #!/usr/bin/python2
 
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
+from PyQt4.QtCore import (Qt, SIGNAL)
+from PyQt4.QtGui import (QMainWindow, QMessageBox, QWidget, QLineEdit, QSlider,
+                         QHBoxLayout, QVBoxLayout, QCheckBox, QLabel, QComboBox,
+                         QAction, QSpinBox)
 
 from sys import argv
 
-from core.helper import *
-from core.mixer import *
+from core.mixer import mixer, spurset, fefilt
 
 class MainWin(QMainWindow):
     def __init__(self, mx, spurs, fef, parent=None, useqwt=False):
@@ -88,7 +89,6 @@ class MainWin(QMainWindow):
 
         leftcol = QVBoxLayout()
         leftcol.addWidget(self.chart.plot)
-        leftcol.setStretchFactor(self.chart.plot, 1)
         leftcol.addLayout(IFbar)
 
         # left column done. Now the right-hand side
@@ -144,6 +144,10 @@ class MainWin(QMainWindow):
         hbox = QHBoxLayout()
         hbox.addLayout(leftcol)
         hbox.addLayout(vbar)
+        # make sure the legend doesn't stretch so far horizontally that the
+        # chart suffers considerable loss of space.
+        hbox.setStretchFactor(leftcol, 5)
+        hbox.setStretchFactor(vbar, 1)
 
         self.main_frame.setLayout(hbox)
         self.setCentralWidget(self.main_frame)
