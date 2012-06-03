@@ -31,8 +31,7 @@ class MainWin(QMainWindow):
         # for changes and updates.
         self.mx.register(self.chart.draw_spurs)
         self.spurset.register(self.chart.draw_spurs)
-        # TODO vv
-        #self.fef.hookup(self.chart.canvas)
+        self.chart.picker_watch(self.fef)
         self.fef.register(self.chart.draw_fef)
         self.chart.draw_spurs(self.spurset)
         self.chart.draw_fef(self.fef)

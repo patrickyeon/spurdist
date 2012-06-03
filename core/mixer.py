@@ -175,15 +175,14 @@ class fefilt(observable):
 
     def onpick(self, event):
         # When either the min or max frequency is selected
-        if event.artist == self.startline:
+        if event.obj == self.startline:
             self.picked = 'minf'
-        elif event.artist == self.stopline:
+        elif event.obj == self.stopline:
             self.picked = 'maxf'
         else:
             # in case something else on the chart's been selected
-            return
-        self._drag = self.canvas.mpl_connect('motion_notify_event', self.ondrag)
-        self.ondrag(event.mouseevent)
+            return False
+        return True
 
     def ondrag(self, event):
         # have to change our values to represent the new ones as they come in
@@ -197,17 +196,7 @@ class fefilt(observable):
             self.stop = event.xdata
 
     def ondrop(self, event):
-        if self.picked is not None:
-            self.picked = None
-        if self._drag is not None:
-            self.canvas.mpl_disconnect(self._drag)
-            self._drag = None
-
-    def hookup(self, canvas):
-        self.canvas = canvas
-        self._pick = canvas.mpl_connect('pick_event', self.onpick)
-        self._drop = canvas.mpl_connect('button_release_event', self.ondrop)
-        self._drag = None
+        pass
 
     def recalc(self, obj):
         start, stop, bw = self.start, self.stop, self.bw
