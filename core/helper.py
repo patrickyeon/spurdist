@@ -31,8 +31,11 @@ class observable(object):
 class styles:
     """A consistent set of line, colour styles"""
     # TODO inherit from defaultdict?
-    def __init__(self, lines=['-', '--', ':', '-.'], colours=list('rgbym')):
-        self.lines, self.colours = lines, colours
+    deflines = '- -- : -.'.split()
+    defcolours = 'red green blue yellow magenta'.split()
+    def __init__(self, lines=None, colours=None):
+        self.lines = lines or styles.deflines
+        self.colours = colours or styles.defcolours
         self._iter = iter(())
         self._dict = {}
 
@@ -72,3 +75,17 @@ class looping_test(object):
                                                                str(firstfail)))
         wrapped.__name__ = f.__name__
         return wrapped
+
+def fmt_mn(m, n):
+    rf = (str(abs(m)) if abs(m) > 1 else '') + 'RF'
+    lo = (str(abs(n)) if abs(n) > 1 else '') + 'LO'
+    if m * n > 0:
+        return rf + ' + ' + lo
+    elif m == 0:
+        return lo
+    elif n == 0:
+        return rf
+    elif m > 0:
+        return rf + ' - ' + lo
+    else:
+        return lo + ' - ' + rf
