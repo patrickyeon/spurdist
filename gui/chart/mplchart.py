@@ -79,6 +79,9 @@ class mplchart(chart):
         self.feflines[1].set_picker(10)
 
     def onpick(self, event):
+        if event.mouseevent.button != 1:
+            # only picking on left-click atm
+            return
         obj, x, y = event.artist, event.mouseevent.xdata, event.mouseevent.ydata
         self.picked_obj = obj
         self.pick(obj, x, y)
@@ -88,5 +91,8 @@ class mplchart(chart):
         self.drag(self.picked_obj, event.xdata, event.ydata)
 
     def ondrop(self, event):
+        if event.button != 1:
+            # only picking on left-click atm
+            return
         self.drop(self.picked_obj, event.xdata, event.ydata)
         self.picked_obj = None
