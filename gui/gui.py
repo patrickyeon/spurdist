@@ -10,17 +10,21 @@ from sys import argv
 from core.mixer import mixer, spurset, fefilt
 
 class MainWin(QMainWindow):
-    def __init__(self, mx, spurs, fef, parent=None, useqwt=False):
+    def __init__(self, mx, spurs, fef, parent=None, plot_lib='mpl'):
         QMainWindow.__init__(self, parent)
 
         self.mx = mx
         self.spurset = spurs
         self.fef = fef
     
-        if useqwt:
+        if plot_lib == 'qwt':
             from chart.qwtchart import qwtchart as chart
-        else:
+        elif plot_lib == 'mpl':
             from chart.mplchart import mplchart as chart
+        elif plot_lib == 'pg':
+            from chart.pyqtgraphchart import pyqtgraphchart as chart
+        else:
+            raise NotImplementedError
 
         self.chart = chart(self.spurset, self.fef, self)
         self.create_menu_bar()

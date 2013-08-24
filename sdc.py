@@ -1,13 +1,13 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 import sys
 import gui.gui as gui
 from core.mixer import mixer, spurset, fefilt
 from PyQt4.QtGui import QApplication
 
-def sdc(mx, spurs, front_filter, useqwt):
+def sdc(mx, spurs, front_filter, plot_lib):
     app = QApplication([''])
-    mainwin = gui.MainWin(mx, spurs, front_filter, useqwt=useqwt)
+    mainwin = gui.MainWin(mx, spurs, front_filter, plot_lib=plot_lib)
     mainwin.show()
     app.exec_()
 
@@ -17,4 +17,4 @@ if __name__ == '__main__':
     mx.spurs_from_limits(2, 4)
     spurs = spurset(0, 8000, 5000, mx)
     front_filter = fefilt(4000, 6000, mx.IFbw)
-    sdc(mx, spurs, front_filter, ('--qwt' in sys.argv))
+    sdc(mx, spurs, front_filter, 'pg')

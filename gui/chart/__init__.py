@@ -25,7 +25,7 @@ class chart:
         raise NotImplementedError
     def add_line(self, line):
         raise NotImplementedError
-    def del_line(self):
+    def del_line(self, line):
         raise NotImplementedError
     def redraw(self):
         raise NotImplementedError
