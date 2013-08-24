@@ -13,8 +13,16 @@ def sdc(mx, spurs, front_filter, plot_lib):
 
     
 if __name__ == '__main__':
+    import argparse
+    
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--chart',
+                        help='library for charting, options are mpl, pg, qwt',
+                        default='pg')
+    args = parser.parse_args()
+
     mx = mixer(-1, 1, 4030, 100, 215)
     mx.spurs_from_limits(2, 4)
     spurs = spurset(0, 8000, 5000, mx)
     front_filter = fefilt(4000, 6000, mx.IFbw)
-    sdc(mx, spurs, front_filter, 'pg')
+    sdc(mx, spurs, front_filter, args.chart)
